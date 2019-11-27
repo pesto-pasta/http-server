@@ -15,13 +15,29 @@ class Router {
 
         this.server = http.createServer((req, res) => {  //runs on request
 
+            const result = {};
+            const params = req.url.split("?");
+            if (params.length === 2) {
+                const pairs = params[1].split("&");
+                for (const pair of pairs) {
+                    const keyval = pair.split('=');
+                    const key = keyval[0];
+                    const value = keyval[1];
+                    result[key] = value;
+                }
+            }
+            req.queryParams = result;
+
             res.html = (template) => {
                 const content = getTemplate(template);
                 res.setHeader("content-type", "text/html");
                 res.write(this.header + content + this.footer);
             }
 
-            const route = this.routes.find((route) => { return req.url === route.url });
+            const route = this.routes.find((route) => {
+                return req.url.includes(route.url) && req.method === route.method
+            });
+
             if (route) {
                 route.handler(req, res);
             } else {
@@ -29,9 +45,6 @@ class Router {
                 res.write("Not Found");
             }
             res.end();
-            // for (const route of routes) {
-
-            // }
 
         })
 
@@ -43,11 +56,16 @@ class Router {
         this.server.listen(port, host);
     }
 
-    addRouteHandler(url, handler) {
-        this.routes.push({
-            url: url,
-            handler: handler
-        })
+    get(url, handler) {
+        this.addRouteHandler(url, handler, "GET");
+    }
+
+    post(url, handler) {
+        this.addRouteHandler(url, handler, "POST");
+    }
+
+    addRouteHandler(url, handler, method) {
+        this.routes.push({ url, handler, method });
     }
 
 
