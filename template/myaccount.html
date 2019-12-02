@@ -6,4 +6,19 @@
     <form action="/index.html">
         <input type="submit" value="Log Out" />
     </form>
+    <form action="/myaccount.html">
+        <input type="range" id="pubgstoke" name="pubgstoke" min="0" max="11" step="1">
+        <label for="pubgstoke">PUBG Stoke Meter</label>
+        <input type="submit" value="SEND IT!"/>
+    </form>
+    <script>
+
+        const pubgSlider = document.getElementById("pubgstoke");
+
+        pubgSlider.addEventListener("change", (ev) => {
+            console.log("Their PUBG stoke is " + ev.target.value);
+            console.dir(ev);
+        })
+        
+        </script>
 </div>

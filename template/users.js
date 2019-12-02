@@ -1,4 +1,6 @@
 
+const pubgStoke = [];
+
 const previousSearches = [];
 
  const users = [
@@ -7,6 +9,6 @@ const previousSearches = [];
     {username: "DJratpack", password: "indahouse"}
 ]
 
-module.exports = {previousSearches, users};
+module.exports = {pubgStoke, previousSearches, users};
 
 

@@ -29,7 +29,7 @@ router.get("/cats", (req, res) => {
 
 
 
-router.get("/secure_login", (req, res) => {
+router.post("/secure_login", (req, res) => {
 
     const users = require('./template/users.js');
 
@@ -37,16 +37,17 @@ router.get("/secure_login", (req, res) => {
 
     let authenticated = false;
     for (let user of users.users) {
-        authenticated = (req.query.password === user.password && req.query.username === user.username);
+        authenticated = (req.body.password === user.password && req.body.username === user.username);
         if (authenticated) {break;}
     }
 
     //give messages based on authentication status
     if (authenticated) {
-        console.log(req.query.username + " logged in");
+        console.log(req.body.username + " logged in");
         res.html('myaccount.html');
     } else {
         console.log("There was a failed login attempt");
+
         // res.write("login failed");
         res.html('login.html');
     }
@@ -79,6 +80,9 @@ router.get("/users_search", (req, res) => {
 })
 
 router.get("/myaccount", (req, res) => {
+    if (req.query.pubgstoke !== undefined) {
+        console.log("userX is Stoked to level " + req.query.pubgstoke);
+    }
     res.html("/myaccount.html");
 })
 
