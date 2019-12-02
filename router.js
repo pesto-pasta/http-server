@@ -14,6 +14,27 @@ class Router {
         this.footer = getTemplate("footer.html");
 
         this.server = http.createServer((req, res) => {  //runs on request
+        
+            //Parse and store the url parameters
+            const result = {};
+            const params = req.url.split('?');
+            if (params.length === 2) {
+                const pairs = params[1].split('&');
+
+                for (const pair of pairs) {
+                    const keyVal = pair.split('=');
+                    const key = keyVal[0];
+                    const value = keyVal[1];
+                    console.log(key, value);
+                    result[key] = value;
+                    
+                }
+
+
+
+            }
+            req.query = result;
+        
 
             res.html = (template) => {
                 const content = getTemplate(template);
@@ -21,17 +42,16 @@ class Router {
                 res.write(this.header + content + this.footer);
             }
 
-            const route = this.routes.find((route) => { return req.url === route.url });
+            console.log(this.routes);
+            const route = this.routes.find((route) => { return req.url.includes(route.url) && req.method === route.method });
             if (route) {
                 route.handler(req, res);
             } else {
                 res.statusCode = 404;
-                res.write("Not Found");
+                res.html("pagenotfound.html");
             }
             res.end();
-            // for (const route of routes) {
 
-            // }
 
         })
 
@@ -43,13 +63,21 @@ class Router {
         this.server.listen(port, host);
     }
 
-    addRouteHandler(url, handler) {
+    addRouteHandler(url, handler, method) {
         this.routes.push({
             url: url,
-            handler: handler
+            handler: handler,
+            method: method,
         })
     }
 
+    get(url, handler) {
+        this.addRouteHandler(url, handler, "GET");
+    }
+
+    post(url, handler) {
+        this.addRouteHandler(url, handler, "POST");
+    }
 
 }
 

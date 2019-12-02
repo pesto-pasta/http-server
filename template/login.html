@@ -1,0 +1,21 @@
+<div style="background-color: lightblue; display: flex; align-items: flex-start; flex-direction: column;">
+    <div>
+        Log in Here:
+        <form action="/secure_login" method="GET">
+            <input placeholder="Username" type="text" name="username" />
+            <input placeholder="Password" type="password" name="password" />
+            <input type="submit" value="Button" />
+        </form>
+    </div>
+    <div>
+        Search for Users:
+        <form action="/users_search">
+            <input placeholder="User" type="text" name="username" />
+            <input type="submit" name="Search" />
+        </form>
+        
+    </div>
+</div>
+<div style="display: flex; align-items: flex-end;">
+    Don't have an account? <a href="/createaccount.html"> Create one</a>.
+</div>
