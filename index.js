@@ -4,6 +4,10 @@ const Router = require('./router.js');
 const router = new Router();
 router.listen(3000, "0.0.0.0");
 
+const users = [
+    { username: "Jordan", password: "1247133182" },
+    { username: "Tyler", password: "MYLITTLEPONY123" }
+]
 
 
 

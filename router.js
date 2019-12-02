@@ -36,6 +36,19 @@ class Router {
             req.query = result;
         
 
+            const result = {};
+            const params = req.url.split("?");
+            if (params.length === 2) {
+                const pairs = params[1].split("&");
+                for (const pair of pairs) {
+                    const keyval = pair.split('=');
+                    const key = keyval[0];
+                    const value = keyval[1];
+                    result[key] = value;
+                }
+            }
+            req.queryParams = result;
+
             res.html = (template) => {
                 const content = getTemplate(template);
                 res.setHeader("content-type", "text/html");
@@ -51,7 +64,6 @@ class Router {
                 res.html("pagenotfound.html");
             }
             res.end();
-
 
         })
 
