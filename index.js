@@ -38,12 +38,13 @@ router.post("/secure_login", (req, res) => {
     //     if (authenticated) { break; }
     // }
 
-    let authenticated = users.users.find((user) => req.body.password === user.password && req.body.username === user.username)
+    let user = users.users.find((user) => req.body.password === user.password && req.body.username === user.username)
 
     //give messages based on authentication status
-    if (authenticated) {
+    if (user) {
+        req.session.user = user;
+        req.session.loggedInTime = new Date();
         console.log(req.body.username + " logged in");
-        res.setHeader("set-Cookie", ["user=" + req.body.username]);
         res.setHeader("location", "/myaccount");  //this is how we redirect the route
         res.statusCode = 302;
 
@@ -70,26 +71,22 @@ router.get("/users_search", (req, res) => {
 })
 
 router.get("/myaccount", (req, res) => {
-    if (req.query.pubgstoke !== undefined) {
-        console.log(req.cookies.user + " is Stoked to level " + req.query.pubgstoke);
-        for (user of users.users) {
-            let found = user.username === req.cookies.user;
-            if (found) { 
-                user.pubgStoke = req.query.pubgstoke;
-                break; 
-            }
-        }
+
+    if (!req.session || !req.session.user) {
+        res.write("YOU ARE NOT LOGGED IN");
+        return;
     }
+
+    if (req.query.pubgstoke !== undefined) {
+        req.session.user.pubgStoke = req.query.pubgstoke;
+    }
+    console.log(req.session.loggedInTime)
     res.html("/myaccount.html");
 })
 
 router.get("/user_details", (req, res) => {
-    if (req.cookies.user) {
-        for (user of users.users) {
-            if (user.username === req.cookies.user) { 
-                res.write(JSON.stringify(user));
-            }
-        }
+    if (req.session.user) {
+       res.write(JSON.stringify(req.session.user));
     }
 })
 

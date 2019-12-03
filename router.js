@@ -1,10 +1,10 @@
 const http = require("http");
 const fs = require("fs");
 
+const sessions = {};
 
 function getTemplate(name) {
     return fs.readFileSync(__dirname + "/template/" + name, { encoding: 'utf-8' });
-
 }
 
 function getParamsObjectFromURLEncodedString(string) {
@@ -15,7 +15,6 @@ function getParamsObjectFromURLEncodedString(string) {
         const key = keyVal[0];
         const value = keyVal[1];
         result[key] = value;
-        // }
     }
     return result;
 }
@@ -38,6 +37,17 @@ class Router {
             }
             req.cookies = cookies;
 
+            if (!req.cookies.sessionID) {
+                const randomNumber = Math.floor(Math.random() * 100000000000);
+                sessions[randomNumber] = {};
+                req.session = sessions[randomNumber];
+                res.setHeader('set-cookie', 'sessionID='+randomNumber);
+            } else {
+                if (!sessions[req.cookies.sessionID]) {
+                    sessions[req.cookies.sessionID] = {};
+                }
+                req.session = sessions[req.cookies.sessionID];
+            }
 
             //Parse and store the url / body parameters
             const params = req.url.split('?');
