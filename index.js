@@ -1,14 +1,9 @@
 
 const Router = require('./router.js');
+const users = require('./template/users.js');
 
 const router = new Router();
 router.listen(3000, "0.0.0.0");
-
-const users = [
-    { username: "Jordan", password: "1247133182" },
-    { username: "Tyler", password: "MYLITTLEPONY123" }
-]
-
 
 
 router.get("/index", (req, res) => {
@@ -31,38 +26,33 @@ router.get("/cats", (req, res) => {
 
 router.post("/secure_login", (req, res) => {
 
+
+
     const users = require('./template/users.js');
 
     //if req.url includes secure_login, test for username and password
 
-    let authenticated = false;
-    for (let user of users.users) {
-        authenticated = (req.body.password === user.password && req.body.username === user.username);
-        if (authenticated) {break;}
-    }
+    // let authenticated = false;
+    // for (let user of users.users) {
+    //     authenticated = (req.body.password === user.password && req.body.username === user.username);
+    //     if (authenticated) { break; }
+    // }
+
+    let authenticated = users.users.find((user) => req.body.password === user.password && req.body.username === user.username)
 
     //give messages based on authentication status
     if (authenticated) {
         console.log(req.body.username + " logged in");
-        res.html('myaccount.html');
+        res.setHeader("set-Cookie", ["user=" + req.body.username]);
+        res.setHeader("location", "/myaccount");  //this is how we redirect the route
+        res.statusCode = 302;
+
     } else {
         console.log("There was a failed login attempt");
 
         // res.write("login failed");
         res.html('login.html');
     }
-
-
-
-
-    //     const user = users.find((user) => {return user.username === result.username && user.password === result.password})
-    //     if (user) {
-    //         res.write("YOU GOT IN TO MY EPIC WEBSITE, " + user.username);
-
-    //     } else {
-    //         res.write("login failed, use back button.");
-    //     }
-    //     console.log();
 
 })
 
@@ -81,9 +71,25 @@ router.get("/users_search", (req, res) => {
 
 router.get("/myaccount", (req, res) => {
     if (req.query.pubgstoke !== undefined) {
-        console.log("userX is Stoked to level " + req.query.pubgstoke);
+        console.log(req.cookies.user + " is Stoked to level " + req.query.pubgstoke);
+        for (user of users.users) {
+            let found = user.username === req.cookies.user;
+            if (found) { 
+                user.pubgStoke = req.query.pubgstoke;
+                break; 
+            }
+        }
     }
     res.html("/myaccount.html");
 })
 
+router.get("/user_details", (req, res) => {
+    if (req.cookies.user) {
+        for (user of users.users) {
+            if (user.username === req.cookies.user) { 
+                res.write(JSON.stringify(user));
+            }
+        }
+    }
+})
 

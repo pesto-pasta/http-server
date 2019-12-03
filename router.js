@@ -28,6 +28,17 @@ class Router {
 
         this.server = http.createServer((req, res) => {  //runs on request
 
+            const cookies = {};
+            if (req.headers.cookie) {
+                const keyPairs = req.headers.cookie.split(";");
+                for (const pair of keyPairs) {
+                    const [key, value] = pair.trim().split("=");
+                    cookies[key] = value;
+                }
+            }
+            req.cookies = cookies;
+
+
             //Parse and store the url / body parameters
             const params = req.url.split('?');
             if (params.length === 2) {
@@ -38,7 +49,7 @@ class Router {
             req.on("data", (chunk) => {
                 string += chunk.toString("utf-8");
             })
-            
+
             req.on("end", () => {
                 req.body = getParamsObjectFromURLEncodedString(string);
 
@@ -58,12 +69,11 @@ class Router {
                 res.end();
             })
 
-
-
-
-
         })
     }
+    // end of constructor
+
+
 
     listen(port, host) {
         this.server.listen(port, host);
