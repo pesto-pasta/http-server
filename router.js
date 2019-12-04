@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const sessions = {};
 
 
 function getTemplate(name) {
@@ -28,6 +29,7 @@ class Router {
 
         this.server = http.createServer((req, res) => {  //runs on request
 
+
             const cookies = {};
             if (req.headers.cookie) {
                 const keyPairs = req.headers.cookie.split(";");
@@ -38,6 +40,19 @@ class Router {
             }
             req.cookies = cookies;
 
+            
+            if (!req.cookies.sessionID) {
+                let myRand = Math.floor(Math.random() * Math.pow(10, 9));  //create a big number
+                sessions[myRand] = {};  //add myRand as an object within the sessions object
+                req.session = sessions[myRand]; //create a session element on req and make it equal to the sessions[myRand] object.. So that we can access it in different files.
+                res.setHeader("set-Cookie", ["sessionID=" + myRand]);  //tee up response to include myRand as sessionID
+            } else {
+                if (!sessions[req.cookies.sessionID]) {
+                    sessions[req.cookies.sessionID] = {};
+                }
+                req.session = sessions[req.cookies.sessionID];
+
+            }
 
             //Parse and store the url / body parameters
             const params = req.url.split('?');
