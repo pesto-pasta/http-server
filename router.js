@@ -8,6 +8,7 @@ function getTemplate(name) {
 
 }
 
+
 function getParamsObjectFromURLEncodedString(string) {
     const result = {};
     const pairs = string.split('&');
@@ -41,15 +42,12 @@ class Router {
             req.cookies = cookies;
 
 
-            if (!req.cookies.sessionID) {
+            if (!req.cookies.sessionID || !sessions[req.cookies.sessionID]) {
                 let myRand = Math.floor(Math.random() * Math.pow(10, 9));  //create a big number
                 sessions[myRand] = {};  //add myRand as an object within the sessions object
                 req.session = sessions[myRand]; //create a session element on req and make it equal to the sessions[myRand] object.. So that we can access it in different files.
                 res.setHeader("set-Cookie", ["sessionID=" + myRand]);  //tee up response to include myRand as sessionID
             } else {
-                if (!sessions[req.cookies.sessionID]) {
-                    sessions[req.cookies.sessionID] = {};
-                }
                 req.session = sessions[req.cookies.sessionID];
 
             }
@@ -69,9 +67,9 @@ class Router {
                 req.body = getParamsObjectFromURLEncodedString(string);
 
                 res.html = (template) => {
-                    const content = getTemplate(template);
+                    // const content = getTemplate(template);
                     res.setHeader("content-type", "text/html");
-                    res.write(this.header + content + this.footer);
+                    res.write(this.header + template + this.footer);
                 }
 
                 const route = this.routes.find((route) => { return req.url.includes(route.url) && req.method === route.method });

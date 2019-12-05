@@ -1,3 +1,8 @@
+<h1>
+    {{#if loginFail}}
+        Sorry. That user does not appear in our system. Try again.
+    {{/if}}
+</h1>
 <div style="background-color: rgb(216, 234, 240); display: flex; align-items: flex-start; flex-direction: column;">
     <div>
         Log in Here:
@@ -12,12 +17,12 @@
         Search for Users:
         <form action="/users_search">
             <!-- NAME is what decides the query parameter -->
-            <input placeholder="User" type="text" name="userSearch" />  
+            <input placeholder="User" type="text" name="userSearch" />
             <input type="submit" value="Search" />
         </form>
-        
+
     </div>
 </div>
 <div style="display: flex; align-items: flex-end;">
-    Don't have an account? <a href="/createaccount">  Create one</a>.
+    Don't have an account? <a href="/createaccount"> Create one</a>.
 </div>
