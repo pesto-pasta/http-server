@@ -5,12 +5,59 @@
         Fusion is fake
     </title>
     <style>
+        body {
+            background-color: rgb(235, 235, 235);
+        }
+
+        h1 {
+            padding: 0 20px 0 20px;
+        }
+
+        div {
+            background-color: white;
+            border: thin grey solid;
+            margin: 5px;
+            padding: 5px;
+        }
+
         #header {
             display: flex;
-            border: thick red solid;
+            background-color: rgb(210, 210, 210);
             justify-content: space-around;
+            align-items: center;
+            height: 40px;
+            font-family: sans-serif;
+            padding-inline-start: 0;
+            list-style: none;
+        }
 
+        #header li {
+            display: flex;
+            width: 200px;
+            text-align: center;
+        }
 
+        #header li a {
+            background-color: hsla(0, 18%, 93%, 0%);
+            font: black;
+            text-decoration: none;
+            height: 100%;
+            width: 400px;
+            padding: 10px;
+        }
+
+        #header li a:hover {
+            background-color:rgb(189, 189, 189);
+        }
+
+        #header li a:visited {
+            text-decoration: none;
+            font-style: italic;
+        }
+
+        #header li a:active {
+            text-emphasis: none;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -18,8 +65,8 @@
 
 <body>
     <ul id="header">
-        <li> <a href="/index">HOME</a> </li>
-        <li> <a href="/cats">CATS PAGE</a></li>
+        <li> <a href="/index" style="text-decoration: none;">HOME</a> </li>
+        <li> <a href="/cats">CATS</a></li>
         <li> <a href="/games">GAMES</a></li>
         <li> <a href="/login">LOGIN</a></li>
 

@@ -26,18 +26,11 @@ router.get("/cats", (req, res) => {
 
 router.post("/secure_login", (req, res) => {
 
-
-
-    const users = require('./template/users.js');
-
-    //if req.url includes secure_login, test for username and password
-
-    // let authenticated = false;
-    // for (let user of users.users) {
-    //     authenticated = (req.body.password === user.password && req.body.username === user.username);
-    //     if (authenticated) { break; }
-    // }
-
+    if (req.body.newUsername && req.body.newPassword) {
+        users.users.push({ username: req.body.newUsername, password: req.body.newPassword });
+        req.body.username = req.body.newUsername;
+        req.body.password = req.body.newPassword;
+    }
     let user = users.users.find((user) => req.body.password === user.password && req.body.username === user.username);
 
     //give messages based on authentication status
@@ -56,22 +49,23 @@ router.post("/secure_login", (req, res) => {
 
 })
 
-router.addRouteHandler("/createaccount.html", (req, res) => {
-    res.html("createaccount.html");
-
+router.get("/createaccount", (req, res) => {
+    res.html("/createaccount.html");
 })
+
 router.get("/users_search", (req, res) => {
-    //if form is submitted from search form, push the search onto previousSearches
-    if (req.url.includes('/users_search')) {
-        users.previousSearches.push(req.query);
-        console.log(previousSearches);
-    }
-    res.html("/login.html")
+    //if form is submitted from search form, push the search onto previousSearches, and 
+    users.previousSearches.push(req.query);
+    const result = users.users.find((user) => user.username === req.query.userSearch);
+    req.session.resultUser = result;
+
+    res.html("/search_results.html")
 })
 
 router.get("/myaccount", (req, res) => {
 
-    //
+
+    //if pubg slider SEND IT button pressed and query includes pubgstoke..
     if (req.query.pubgstoke !== undefined) {
         console.log(req.session.user.username + " is Stoked to level " + req.query.pubgstoke);
         req.session.user.pubgstoke = req.query.pubgstoke;
@@ -85,7 +79,9 @@ router.get("/user_details", (req, res) => {
     if (req.session.user) {
         res.write(JSON.stringify(req.session.user));
     }
-
+    if (req.session.resultUser) {
+        res.write(JSON.stringify(req.session.resultUser));
+    }
 
 })
 

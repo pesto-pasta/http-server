@@ -40,7 +40,7 @@ class Router {
             }
             req.cookies = cookies;
 
-            
+
             if (!req.cookies.sessionID) {
                 let myRand = Math.floor(Math.random() * Math.pow(10, 9));  //create a big number
                 sessions[myRand] = {};  //add myRand as an object within the sessions object

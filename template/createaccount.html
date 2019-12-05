@@ -1,9 +1,11 @@
-<h1> 
-    Create your free (for now) account!
+<h1>
+    Create your account
 </h1>
 
-<form action="/create">
-    <input type="text" name="username"/>
-    <input type="password" name="password"/>
-    <input type="submit" value="Button"/>
-</form>>
+<div style="display: flex; align-items: center; padding: 1em;">
+    <form action="/secure_login" style="margin: 0;" method="POST">
+        <input type="text" name="newUsername" placeholder="Epic Username" />
+        <input type="password" name="newPassword" placeholder="Unbreakable Pass" style="width: 120px;" />
+        <input type="submit" value="Make!" />
+    </form>
+</div>
